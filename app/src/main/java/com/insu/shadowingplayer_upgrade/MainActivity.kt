@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity() {
     }
     private fun getAllAudio(){
         val projection=arrayOf(MediaStore.Audio.Media._ID,
-        MediaStore.Audio.Media.TITLE,
+        MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.DATA,
         MediaStore.Audio.Media.DURATION)
         val sortOrder="${MediaStore.Audio.Media.TITLE} DESC"
         val cursor=contentResolver.query(
@@ -86,9 +86,11 @@ class MainActivity : AppCompatActivity() {
                     MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
                     id.toString()
                 )
-                audios.add(AudioData(title,duration,uri))
+                var path=cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA))
+                audios.add(AudioData(title,duration,uri,path))
             }
         }
+        cursor?.close()
     }
     private fun getFolderName(uri:Uri):String{
         val proj = arrayOf(MediaStore.Images.Media.DATA)

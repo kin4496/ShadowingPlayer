@@ -34,6 +34,7 @@ class HomeFragment : Fragment() {
     }
     private fun clickAudio(id:Int){
         val intent= Intent(activity!!,AudioActivity::class.java)
+        intent.putExtra("id",id)
         startActivity(intent)
     }
 }

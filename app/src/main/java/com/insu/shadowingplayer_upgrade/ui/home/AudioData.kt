@@ -5,9 +5,10 @@ import android.net.Uri
 class AudioData(
     var title:String,
     var durationText:String,
-    var uri: Uri
+    var uri: Uri,
+    var path:String
 ){
-    var duration=durationText.toInt().toLong()
+    var duration=durationText.toInt()
     var durationForTextView=durationTextConvert()
     private fun durationTextConvert():String{
         var second = (duration / 1000) % 60;
