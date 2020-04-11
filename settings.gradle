@@ -1,0 +1,2 @@
+rootProject.name='ShadowingPlayer_Upgrade'
+include ':app'
