@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.os.IBinder
 import android.provider.MediaStore
 import android.util.Log
+import androidx.activity.OnBackPressedCallback
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -64,6 +65,7 @@ class MainActivity : AppCompatActivity() {
         val intent= Intent(this,AudioService::class.java)
         bindService(intent,mConnection, Context.BIND_AUTO_CREATE)
         startService(intent)
+
 
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -119,7 +121,6 @@ class MainActivity : AppCompatActivity() {
         }
         cursor?.close()
     }
-
     override fun onResume() {
         super.onResume()
         if(mService!=null)
