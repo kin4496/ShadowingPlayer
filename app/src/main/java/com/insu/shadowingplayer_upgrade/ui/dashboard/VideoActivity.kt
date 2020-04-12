@@ -13,6 +13,7 @@ import com.`is`.shadowingplayer.SubtData
 import com.insu.shadowingplayer_upgrade.R
 import kotlinx.android.synthetic.main.activity_video.*
 import java.io.*
+import java.util.*
 import kotlin.concurrent.timer
 
 class VideoActivity : AppCompatActivity() {
@@ -20,8 +21,11 @@ class VideoActivity : AppCompatActivity() {
 
     var useSmi=false
     var useSrt=false
+    var titleTask: Timer?=null
     var parsedSrt=mutableListOf<SubtData>()
     var parsedSmi = mutableListOf<SubtData>()
+    lateinit var subAdapter:sublistAdapter
+    lateinit var uri:Uri
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video)
@@ -33,28 +37,39 @@ class VideoActivity : AppCompatActivity() {
                 mc.setAnchorView(videoView)
             }
         }
-        var uri= Uri.parse(intent.getStringExtra("Uri"))
+        uri= Uri.parse(intent.getStringExtra("Uri"))
         videoView.setVideoURI(uri)
         videoView.requestFocus()
         videoView.start()
         readSubTitleData(uri)
         if(useSmi){
-            val subAdapter=sublistAdapter(this,parsedSmi)
+            subAdapter=sublistAdapter(this,parsedSmi)
             subtitleListView.adapter=subAdapter
-            titleTask(subAdapter)
+            titleSmiTask()
         }else if(useSrt){
-            val subAdapter=sublistAdapter(this,parsedSrt)
+            subAdapter=sublistAdapter(this,parsedSrt)
             subtitleListView.adapter=subAdapter
-            titleTask(subAdapter)
+            titleSrtTask()
         }
         if(useSmi||useSrt){
             subtitleListView.setOnItemClickListener { parent, view, position, id ->
                 videomove(id)
             }
         }
+
+
     }
-    private fun titleTask(adapter:sublistAdapter){
-        timer(period=1000){
+
+    override fun onResume() {
+        super.onResume()
+        if(useSmi){
+            titleSmiTask()
+        }else if(useSrt){
+            titleSrtTask()
+        }
+    }
+    private fun titleSmiTask(){
+        titleTask=timer(period=1000){
             var cur=videoView.currentPosition
             var id=0
             while(true){
@@ -74,9 +89,41 @@ class VideoActivity : AppCompatActivity() {
                             break
                         parsedSmi[id].isUse=false
                     }
-                    adapter.notifyDataSetChanged()
+                    subAdapter.notifyDataSetChanged()
                 }
             }
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        titleTask?.cancel()
+    }
+    private fun titleSrtTask(){
+        titleTask=timer(period=1000){
+            var cur=videoView.currentPosition
+            var id=0
+            while(true){
+                if(id==parsedSrt.size-1)
+                    break;
+                if(cur>=parsedSrt[id].time&&cur<parsedSrt[id+1].time)
+                    break
+                parsedSrt[id].isUse=false
+                id++
+            }
+            runOnUiThread {
+                if(!parsedSrt[id].isUse&&cur>=parsedSrt[0].time){
+                    parsedSrt[id].isUse=true
+                    while(true){
+                        id++
+                        if(id>=parsedSrt.size-1)
+                            break
+                        parsedSrt[id].isUse=false
+                    }
+                    subAdapter.notifyDataSetChanged()
+                }
+            }
+
         }
     }
     private fun videomove(pos:Long){

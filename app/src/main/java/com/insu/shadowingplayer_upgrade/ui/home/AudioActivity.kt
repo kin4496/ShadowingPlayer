@@ -23,19 +23,24 @@ import kotlinx.android.synthetic.main.activity_audio.view.*
 import kotlinx.android.synthetic.main.activity_video.*
 import org.jetbrains.anko.image
 import java.io.*
+import java.util.*
 import kotlin.concurrent.timer
 import kotlin.concurrent.timerTask
-
+private const val TAG="LifeCycle"
 class AudioActivity : AppCompatActivity() {
 
     lateinit var uri:Uri
     lateinit var path:String
+    var titleTask: Timer?=null
+    var seekBarTask:Timer?=null
     var useSmi=false
     var useSrt=false
     var parsedSrt=mutableListOf<SubtData>()
     var parsedSmi = mutableListOf<SubtData>()
+    lateinit var subAdapter:sublistAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_audio)
         val id=intent.getIntExtra("id",0)
         val audio= MainActivity.audios[id]
@@ -50,36 +55,53 @@ class AudioActivity : AppCompatActivity() {
         startService(intent)
         playBt.setOnClickListener{
             if(mService?.isPlaying()==false){
+                playBt.setImageResource(R.drawable.ic_pause_black_24dp)
                 mService?.play()
             }else{
+                playBt.setImageResource(R.drawable.ic_play_arrow_black_24dp)
                 mService?.pause()
             }
         }
+        readSubTitleData()
+        if(useSmi){
+            subAdapter=sublistAdapter(this,parsedSmi)
+            audioSubtitleListView.adapter=subAdapter
+
+        }else if(useSrt){
+
+            subAdapter=sublistAdapter(this,parsedSrt)
+            audioSubtitleListView.adapter=subAdapter
+
+        }
+        audioSubtitleListView.requestFocusFromTouch()
+        if(useSmi||useSrt){
+            audioSubtitleListView.setOnItemClickListener { parent, view, position, id ->
+                audioMove(id.toInt())
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
         seekBar.progress = 0
-        timer(period=500){
+        seekBarTask=timer(period=500){
             var cur=if(mService==null){
                 0
             }else{
                 mService!!.currentPlaying()
             }
-            seekBar.progress=0
+            //seekBar.progress=0
             seekBar.progress=cur
             startTextView.text=durationTextConvert(cur)
         }
-        readSubTitleData()
+
         if(useSmi){
-            val subAdapter=sublistAdapter(this,parsedSmi)
-            audioSubtitleListView.adapter=subAdapter
-            titleTask(subAdapter)
-        }else if(useSrt){
-            val subAdapter=sublistAdapter(this,parsedSrt)
-            audioSubtitleListView.adapter=subAdapter
-            titleTask(subAdapter)
+            titleSmiTask()
         }
-        if(useSmi||useSrt){
-            subtitleListView.setOnItemClickListener { parent, view, position, id ->
-                audioMove(id.toInt())
-            }
+        else if(useSrt){
+
+            titleSrtTask()
         }
     }
     private fun audioMove(pos:Int){
@@ -240,7 +262,7 @@ class AudioActivity : AppCompatActivity() {
     private fun smiSearch(){
         var id=0
         for(t in parsedSmi){
-            if(t.time>videoView.currentPosition)
+            if(t.time>mService!!.currentPlaying())
                 break
             id++
         }
@@ -252,7 +274,7 @@ class AudioActivity : AppCompatActivity() {
     private fun srtSearch(){
         var id=0
         for(t in parsedSrt){
-            if(t.time>videoView.currentPosition)
+            if(t.time>mService!!.currentPlaying())
                 break
             id++
         }
@@ -261,32 +283,74 @@ class AudioActivity : AppCompatActivity() {
         subtitleListView.setSelection(id)
         parsedSrt[id].isUse=true
     }
-    private fun titleTask(adapter: sublistAdapter){
-        timer(period=1000){
-            var cur=videoView.currentPosition
-            var id=0
-            while(true){
-                if(id==parsedSmi.size-1)
-                    break;
-                if(cur>=parsedSmi[id].time&&cur<parsedSmi[id+1].time)
-                    break
-                parsedSmi[id].isUse=false
-                id++
-            }
-            runOnUiThread {
-                if(!parsedSmi[id].isUse&&cur>=parsedSmi[0].time){
-                    parsedSmi[id].isUse=true
-                    while(true){
-                        id++
-                        if(id>=parsedSmi.size-1)
-                            break
-                        parsedSmi[id].isUse=false
+    override fun onPause() {
+        super.onPause()
+        Log.d(TAG,"onPause")
+        titleTask?.cancel()
+        seekBarTask?.cancel()
+    }
+    private fun titleSmiTask(){
+        titleTask=timer(period=1000){
+            if(mService!=null){
+                var cur=mService!!.currentPlaying()
+                var id=0
+                while(true){
+                    if(id==parsedSmi.size-1)
+                        break
+                    if(cur>=parsedSmi[id].time&&cur<parsedSmi[id+1].time)
+                        break
+                    parsedSmi[id].isUse=false
+                    id++
+                }
+                runOnUiThread {
+                    if(!parsedSmi[id].isUse&&cur>=parsedSmi[0].time){
+                        parsedSmi[id].isUse=true
+                        while(true){
+                            id++
+                            if(id>=parsedSmi.size-1)
+                                break
+                            parsedSmi[id].isUse=false
+                        }
+                        subAdapter.notifyDataSetChanged()
                     }
-                    adapter.notifyDataSetChanged()
                 }
             }
+
         }
     }
+    private fun titleSrtTask(){
+        titleTask=timer(period=1000){
+
+            if(mService!=null){
+
+                var cur=mService!!.currentPlaying()
+                var id=0
+                while(true){
+                    if(id==parsedSrt.size-1)
+                        break
+                    if(cur>=parsedSrt[id].time&&cur<parsedSrt[id+1].time)
+                        break
+                    parsedSrt[id].isUse=false
+                    id++
+                }
+                runOnUiThread {
+                    if(!parsedSrt[id].isUse&&cur>=parsedSrt[0].time){
+                        parsedSrt[id].isUse=true
+                        while(true){
+                            id++
+                            if(id>=parsedSrt.size-1)
+                                break
+                            parsedSrt[id].isUse=false
+                        }
+                        subAdapter.notifyDataSetChanged()
+                    }
+                }
+            }
+
+
+        }
+    }
+
     private fun durationTextConvert(duration:Int):String{
         var second = (duration / 1000) % 60;
         var minute = (duration / (1000 * 60)) % 60;
