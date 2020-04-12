@@ -10,6 +10,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.MediaController
 import com.`is`.shadowingplayer.SubtData
+import com.insu.shadowingplayer_upgrade.MainActivity
 import com.insu.shadowingplayer_upgrade.R
 import kotlinx.android.synthetic.main.activity_video.*
 import java.io.*
@@ -59,7 +60,11 @@ class VideoActivity : AppCompatActivity() {
 
 
     }
-
+    override fun getSupportParentActivityIntent(): Intent? {
+        val intent=Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        return intent
+    }
     override fun onResume() {
         super.onResume()
         if(useSmi){

@@ -26,7 +26,7 @@ import java.io.*
 import java.util.*
 import kotlin.concurrent.timer
 import kotlin.concurrent.timerTask
-private const val TAG="LifeCycle"
+
 class AudioActivity : AppCompatActivity() {
 
     lateinit var uri:Uri
@@ -49,17 +49,16 @@ class AudioActivity : AppCompatActivity() {
         title=audio.title
         seekBar.max=audio.duration
         endTextView.text=audio.durationForTextView
-        val intent= Intent(this,AudioService::class.java)
-        bindService(intent,mConnection, Context.BIND_AUTO_CREATE)
-        //intent.putExtra("path",path)
+
+
         startService(intent)
         playBt.setOnClickListener{
-            if(mService?.isPlaying()==false){
+            if(MainActivity.mService?.isPlaying()==false){
                 playBt.setImageResource(R.drawable.ic_pause_black_24dp)
-                mService?.play()
+                MainActivity.mService?.play()
             }else{
                 playBt.setImageResource(R.drawable.ic_play_arrow_black_24dp)
-                mService?.pause()
+                MainActivity.mService?.pause()
             }
         }
         readSubTitleData()
@@ -86,10 +85,10 @@ class AudioActivity : AppCompatActivity() {
 
         seekBar.progress = 0
         seekBarTask=timer(period=500){
-            var cur=if(mService==null){
+            var cur=if(MainActivity.mService==null){
                 0
             }else{
-                mService!!.currentPlaying()
+                MainActivity.mService!!.currentPlaying()
             }
             //seekBar.progress=0
             seekBar.progress=cur
@@ -108,38 +107,15 @@ class AudioActivity : AppCompatActivity() {
 
         if(useSmi){
             //Toast.makeText(this,"${pos.toInt()} : ${parsedSmi[pos.toInt()].time.toInt()}",Toast.LENGTH_LONG).show()
-            mService?.seekTo(parsedSmi[pos.toInt()].time.toInt())
+            MainActivity.mService?.seekTo(parsedSmi[pos.toInt()].time.toInt())
         }
         else if(useSrt){
             //Toast.makeText(this,"${pos.toInt()} : ${parsedSrt[pos.toInt()].time.toInt()}",Toast.LENGTH_LONG).show()
-            mService?.seekTo(parsedSrt[pos.toInt()].time.toInt())
+            MainActivity.mService?.seekTo(parsedSrt[pos.toInt()].time.toInt())
         }
 
     }
-    var mService:AudioService?=null
-    var mBound=false
-    var mConnection=object:ServiceConnection{
-        override fun onServiceDisconnected(name: ComponentName?) {
-            mService=null
-            mBound=false
-        }
 
-        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            val binder=service as AudioService.AudioServiceBinder
-            mService=binder.getService()
-            mBound=true
-            mService!!.initMediaPlayer(uri)
-
-        }
-
-    }
-    override fun onStop() {
-        super.onStop()
-        if(mBound){
-            unbindService(mConnection)
-            mBound=false
-        }
-    }
     private fun readSubTitleData(){
 
         val smiPath: String =
@@ -244,7 +220,7 @@ class AudioActivity : AppCompatActivity() {
         }
     }
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.video,menu)
+        menuInflater.inflate(R.menu.audio,menu)
         return true
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -262,7 +238,7 @@ class AudioActivity : AppCompatActivity() {
     private fun smiSearch(){
         var id=0
         for(t in parsedSmi){
-            if(t.time>mService!!.currentPlaying())
+            if(t.time>MainActivity.mService!!.currentPlaying())
                 break
             id++
         }
@@ -271,10 +247,15 @@ class AudioActivity : AppCompatActivity() {
         subtitleListView.setSelection(id)
         parsedSmi[id].isUse=true
     }
+    override fun getSupportParentActivityIntent(): Intent? {
+        val intent=Intent(this,MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        return intent
+    }
     private fun srtSearch(){
         var id=0
         for(t in parsedSrt){
-            if(t.time>mService!!.currentPlaying())
+            if(t.time>MainActivity.mService!!.currentPlaying())
                 break
             id++
         }
@@ -285,14 +266,14 @@ class AudioActivity : AppCompatActivity() {
     }
     override fun onPause() {
         super.onPause()
-        Log.d(TAG,"onPause")
+
         titleTask?.cancel()
         seekBarTask?.cancel()
     }
     private fun titleSmiTask(){
         titleTask=timer(period=1000){
-            if(mService!=null){
-                var cur=mService!!.currentPlaying()
+            if(MainActivity.mService!=null){
+                var cur=MainActivity.mService!!.currentPlaying()
                 var id=0
                 while(true){
                     if(id==parsedSmi.size-1)
@@ -321,9 +302,9 @@ class AudioActivity : AppCompatActivity() {
     private fun titleSrtTask(){
         titleTask=timer(period=1000){
 
-            if(mService!=null){
+            if(MainActivity.mService!=null){
 
-                var cur=mService!!.currentPlaying()
+                var cur=MainActivity.mService!!.currentPlaying()
                 var id=0
                 while(true){
                     if(id==parsedSrt.size-1)

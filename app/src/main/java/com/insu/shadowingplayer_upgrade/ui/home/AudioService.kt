@@ -15,7 +15,7 @@ import android.provider.MediaStore
 class AudioService: Service() {
     val mBinder=AudioServiceBinder()
     val mediaPlayer=MediaPlayer()
-
+    var title=""
 
 
     override fun onBind(intent: Intent): IBinder? {
@@ -24,7 +24,8 @@ class AudioService: Service() {
     inner class AudioServiceBinder: Binder() {
         fun getService():AudioService=this@AudioService
     }
-    fun initMediaPlayer(uri:Uri){
+    fun initMediaPlayer(uri:Uri,title:String){
+        this.title=title
         mediaPlayer.reset()
         mediaPlayer.setDataSource(applicationContext,uri)
         mediaPlayer.prepare()

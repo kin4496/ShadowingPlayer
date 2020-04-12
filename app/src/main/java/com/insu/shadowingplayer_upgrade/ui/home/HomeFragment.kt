@@ -2,6 +2,7 @@ package com.insu.shadowingplayer_upgrade.ui.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.insu.shadowingplayer_upgrade.MainActivity
 import com.insu.shadowingplayer_upgrade.R
-
+private const val TAG="HomeFragment"
 class HomeFragment : Fragment() {
 
 
@@ -33,6 +34,12 @@ class HomeFragment : Fragment() {
         return root
     }
     private fun clickAudio(id:Int){
+        if(MainActivity.mService!=null){
+            if(MainActivity.mService!!.title!=MainActivity.audios[id].title){
+                Log.d(TAG,"new start")
+                MainActivity.mService?.initMediaPlayer(MainActivity.audios[id].uri,MainActivity.audios[id].title)
+            }
+        }
         val intent= Intent(activity!!,AudioActivity::class.java)
         intent.putExtra("id",id)
         startActivity(intent)

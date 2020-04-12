@@ -1,11 +1,16 @@
 package com.insu.shadowingplayer_upgrade
 
 import android.Manifest
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.os.IBinder
 import android.provider.MediaStore
 import android.util.Log
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -18,14 +23,30 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.insu.shadowingplayer_upgrade.ui.dashboard.VideoData
 import com.insu.shadowingplayer_upgrade.ui.home.AudioData
+import com.insu.shadowingplayer_upgrade.ui.home.AudioService
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.noButton
 import org.jetbrains.anko.yesButton
 private const val REQUEST_READ_EXTERNAL_STORAGE=1000
+private const val TAG="LifeCycle"
 class MainActivity : AppCompatActivity() {
     companion object{
         var videos=mutableListOf<VideoData>()
         var audios=mutableListOf<AudioData>()
+        var mService: AudioService?=null
+        var mBound=false
+        var mConnection=object: ServiceConnection {
+            override fun onServiceDisconnected(name: ComponentName?) {
+                mService=null
+                mBound=false
+            }
+            override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+                val binder=service as AudioService.AudioServiceBinder
+                mService=binder.getService()
+                mBound=true
+            }
+
+        }
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +61,10 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
+        val intent= Intent(this,AudioService::class.java)
+        bindService(intent,mConnection, Context.BIND_AUTO_CREATE)
+        startService(intent)
+
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
@@ -53,7 +78,9 @@ class MainActivity : AppCompatActivity() {
                             arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
                             REQUEST_READ_EXTERNAL_STORAGE)
                     }
-                    noButton { }
+                    noButton {
+                        finish()
+                    }
                 }.show()
             } else {
                 // 권한 요청 ④
@@ -91,6 +118,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
         cursor?.close()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(mService!=null)
+            mBound=true
+        Log.d(TAG,"onResume: $mBound")
     }
     private fun getFolderName(uri:Uri):String{
         val proj = arrayOf(MediaStore.Images.Media.DATA)
