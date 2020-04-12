@@ -198,4 +198,19 @@ class MainActivity : AppCompatActivity() {
         }
         cursor?.close()
     }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+         when(requestCode){
+            REQUEST_READ_EXTERNAL_STORAGE->{
+                if(grantResults.isNotEmpty()&&grantResults[0]==PackageManager.PERMISSION_GRANTED){
+                    getAllAudio()
+                    getAllVideo()
+                }
+            }
+        }
+    }
 }
