@@ -18,7 +18,7 @@ import com.insu.shadowingplayer_upgrade.IOnBackPressed
 import com.insu.shadowingplayer_upgrade.R
 import kotlinx.android.synthetic.main.fragment_notifications.*
 private const val TAG="WebView"
-class NotificationsFragment : Fragment(){
+class NotificationsFragment : Fragment(),IOnBackPressed{
 
 
     lateinit var webView:WebView
@@ -54,6 +54,10 @@ class NotificationsFragment : Fragment(){
         return root
     }
 
-
+    override fun onBackPressed(){
+       if(webView.canGoBack()){
+           webView.goBack()
+       }
+    }
 
 }

@@ -121,6 +121,20 @@ class MainActivity : AppCompatActivity() {
         }
         cursor?.close()
     }
+    override fun onBackPressed() {
+        val fragments=supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
+        when (val fragment= fragments?.childFragmentManager?.fragments?.get(0)) {
+            null -> {
+                super.onBackPressed()
+            }
+            is IOnBackPressed -> {
+                fragment.onBackPressed()
+            }
+            else -> {
+                super.onBackPressed()
+            }
+        }
+    }
     override fun onResume() {
         super.onResume()
         if(mService!=null)
