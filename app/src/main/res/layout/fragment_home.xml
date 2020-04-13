@@ -30,6 +30,7 @@
     </ListView>
 
     <LinearLayout
+        android:id="@+id/currentLayout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@android:color/darker_gray"

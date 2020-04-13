@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -31,6 +32,7 @@ class HomeFragment : Fragment() {
         val root = inflater.inflate(R.layout.fragment_home, container, false)
         val audioListView: ListView =root.findViewById(R.id.audioListView)
         val audioAdapter=AudioListAdapter(activity!!,MainActivity.audios)
+        val currentLayout:LinearLayout=root.findViewById(R.id.currentLayout)
         audioTitleTextView=root.findViewById(R.id.audioTitleTextView)
         playBt=root.findViewById(R.id.playOrPauseBt)
         val adBanner: AdView =root.findViewById(R.id.audioBanner)
@@ -49,6 +51,19 @@ class HomeFragment : Fragment() {
             }else{
                 playBt.setImageResource(R.drawable.ic_play_arrow_black_24dp)
                 MainActivity.mService?.pause()
+            }
+        }
+        currentLayout.setOnClickListener {
+            if(MainActivity.mService!=null){
+                if(MainActivity!!.mService!!.title!=""){
+                    for(i in MainActivity.audios.indices){
+                        if(MainActivity!!.mService!!.title==MainActivity.audios[i].title){
+                            val intent= Intent(activity!!,AudioActivity::class.java)
+                            intent.putExtra("id",i)
+                            startActivity(intent)
+                        }
+                    }
+                }
             }
         }
         audioListView.setOnItemClickListener { parent, view, position, id ->
