@@ -1,31 +1,20 @@
-package com.insu.shadowingplayer_upgrade.ui.home
+package com.insu.shadowingplayer_upgrade.ui.audio
 
-import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
-import android.content.ServiceConnection
-import android.database.Cursor
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.IBinder
-import android.provider.DocumentsContract
-import android.provider.MediaStore
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.`is`.shadowingplayer.SubtData
 import com.insu.shadowingplayer_upgrade.MainActivity
 import com.insu.shadowingplayer_upgrade.R
-import com.insu.shadowingplayer_upgrade.ui.dashboard.sublistAdapter
+import com.insu.shadowingplayer_upgrade.ui.video.sublistAdapter
 import kotlinx.android.synthetic.main.activity_audio.*
-import kotlinx.android.synthetic.main.activity_audio.view.*
 import kotlinx.android.synthetic.main.activity_video.*
-import org.jetbrains.anko.image
 import java.io.*
 import java.util.*
 import kotlin.concurrent.timer
-import kotlin.concurrent.timerTask
 
 class AudioActivity : AppCompatActivity() {
 

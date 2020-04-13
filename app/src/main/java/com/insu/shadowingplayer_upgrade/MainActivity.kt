@@ -13,7 +13,6 @@ import android.os.Bundle
 import android.os.IBinder
 import android.provider.MediaStore
 import android.util.Log
-import androidx.activity.OnBackPressedCallback
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -23,9 +22,9 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.gms.ads.MobileAds
-import com.insu.shadowingplayer_upgrade.ui.dashboard.VideoData
-import com.insu.shadowingplayer_upgrade.ui.home.AudioData
-import com.insu.shadowingplayer_upgrade.ui.home.AudioService
+import com.insu.shadowingplayer_upgrade.ui.video.VideoData
+import com.insu.shadowingplayer_upgrade.ui.audio.AudioData
+import com.insu.shadowingplayer_upgrade.ui.audio.AudioService
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.noButton
 import org.jetbrains.anko.yesButton
@@ -59,7 +58,7 @@ class MainActivity : AppCompatActivity() {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications))
+                R.id.navigation_audio, R.id.navigation_video, R.id.navigation_word))
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 

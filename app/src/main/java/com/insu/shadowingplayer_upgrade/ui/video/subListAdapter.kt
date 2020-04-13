@@ -1,4 +1,4 @@
-package com.insu.shadowingplayer_upgrade.ui.dashboard
+package com.insu.shadowingplayer_upgrade.ui.video
 
 import android.content.Context
 import android.graphics.Color

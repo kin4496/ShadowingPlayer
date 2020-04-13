@@ -1,4 +1,4 @@
-package com.insu.shadowingplayer_upgrade.ui.home
+package com.insu.shadowingplayer_upgrade.ui.video
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -8,14 +8,14 @@ import android.widget.BaseAdapter
 import android.widget.TextView
 import com.insu.shadowingplayer_upgrade.R
 
-class AudioListAdapter(val context: Context, val audioList:MutableList<AudioData>):
+class folderListAdapter(val context: Context, val folderList:MutableList<String>):
     BaseAdapter() {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view: View
         val holder: Viewholder
         if(convertView==null){
             view= LayoutInflater.from(parent?.context)
-                .inflate(R.layout.item_audio,parent,false)
+                .inflate(R.layout.item_folder,parent,false)
             holder= Viewholder(view)
             view.tag=holder
         }else{
@@ -23,15 +23,15 @@ class AudioListAdapter(val context: Context, val audioList:MutableList<AudioData
             holder=view.tag as Viewholder
         }
 
-        var audio=audioList[position]
-        holder.duration.text=audio.durationForTextView
-        holder.title.text=audio.title
+        var folder=folderList[position]
+
+        holder.text.text=folder
 
         return view
     }
 
     override fun getItem(position: Int): Any {
-        return audioList[position]
+        return folderList[position]
     }
 
     override fun getItemId(position: Int): Long {
@@ -39,11 +39,10 @@ class AudioListAdapter(val context: Context, val audioList:MutableList<AudioData
     }
 
     override fun getCount(): Int {
-        return audioList.size
+        return folderList.size
     }
     private class Viewholder(view: View){
 
-        var title: TextView =view.findViewById(R.id.titleTextView)
-        var duration:TextView=view.findViewById(R.id.durationTextView)
+        var text: TextView =view.findViewById(R.id.Name)
     }
 }

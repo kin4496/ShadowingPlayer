@@ -1,16 +1,11 @@
-package com.insu.shadowingplayer_upgrade.ui.home
+package com.insu.shadowingplayer_upgrade.ui.audio
 
 import android.app.Service
-import android.content.Context
 import android.content.Intent
-import android.database.Cursor
-import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Binder
 import android.os.IBinder
-import android.os.PowerManager
-import android.provider.MediaStore
 
 class AudioService: Service() {
     val mBinder=AudioServiceBinder()

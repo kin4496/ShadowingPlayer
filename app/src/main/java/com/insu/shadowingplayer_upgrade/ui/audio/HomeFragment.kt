@@ -1,4 +1,4 @@
-package com.insu.shadowingplayer_upgrade.ui.home
+package com.insu.shadowingplayer_upgrade.ui.audio
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,10 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.insu.shadowingplayer_upgrade.MainActivity

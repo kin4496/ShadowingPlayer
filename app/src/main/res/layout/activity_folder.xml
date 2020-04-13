@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.dashboard.FolderActivity">
+    tools:context=".ui.video.FolderActivity">
 
     <ListView
         android:id="@+id/videoListView"

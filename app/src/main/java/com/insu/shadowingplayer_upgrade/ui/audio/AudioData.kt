@@ -1,4 +1,4 @@
-package com.insu.shadowingplayer_upgrade.ui.home
+package com.insu.shadowingplayer_upgrade.ui.audio
 
 import android.net.Uri
 

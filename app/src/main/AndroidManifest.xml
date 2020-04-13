@@ -16,7 +16,7 @@
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-3940256099942544~3347511713" />
-        <activity android:name=".ui.home.AudioActivity"
+        <activity android:name=".ui.audio.AudioActivity"
             android:parentActivityName=".MainActivity"></activity>
         <activity
             android:name=".SplashActivity"
@@ -27,12 +27,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.dashboard.VideoActivity" />
-        <activity android:name=".ui.dashboard.FolderActivity" />
+        <activity android:name=".ui.video.VideoActivity" />
+        <activity android:name=".ui.video.FolderActivity" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"></activity>
-        <service android:name=".ui.home.AudioService"
+        <service android:name=".ui.audio.AudioService"
             android:enabled="true"
             android:exported="true"></service>
     </application>
