@@ -7,6 +7,20 @@
     android:orientation="vertical"
     tools:context=".ui.home.HomeFragment" >
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="vertical">
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/audioBanner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            app:adSize="BANNER"
+            app:adUnitId="ca-app-pub-3940256099942544/6300978111"></com.google.android.gms.ads.AdView>
+    </LinearLayout>
+
     <ListView
         android:id="@+id/audioListView"
         android:layout_width="match_parent"

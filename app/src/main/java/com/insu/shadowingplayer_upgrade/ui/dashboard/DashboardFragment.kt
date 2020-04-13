@@ -15,6 +15,8 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
 import com.insu.shadowingplayer_upgrade.MainActivity
 import com.insu.shadowingplayer_upgrade.R
 import java.net.URI
@@ -33,7 +35,9 @@ class DashboardFragment : Fragment() {
 
         val folderListView: ListView =root.findViewById(R.id.folderListView)
         var folderSet=mutableSetOf<String>()
-
+        val adBanner: AdView =root.findViewById(R.id.videoBanner)
+        val adRequest = AdRequest.Builder().build()
+        adBanner.loadAd(adRequest)
         for(i in MainActivity.videos){
             folderSet.add(i.foldername)
         }

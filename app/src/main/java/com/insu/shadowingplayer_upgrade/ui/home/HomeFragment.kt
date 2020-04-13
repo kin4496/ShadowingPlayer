@@ -11,6 +11,8 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
 import com.insu.shadowingplayer_upgrade.MainActivity
 import com.insu.shadowingplayer_upgrade.R
 private const val TAG="HomeFragment"
@@ -26,6 +28,9 @@ class HomeFragment : Fragment() {
         val root = inflater.inflate(R.layout.fragment_home, container, false)
         val audioListView: ListView =root.findViewById(R.id.audioListView)
         val audioAdapter=AudioListAdapter(activity!!,MainActivity.audios)
+        val adBanner: AdView =root.findViewById(R.id.audioBanner)
+        val adRequest = AdRequest.Builder().build()
+        adBanner.loadAd(adRequest)
         audioListView.adapter=audioAdapter
         audioListView.requestFocusFromTouch()
         audioListView.setOnItemClickListener { parent, view, position, id ->

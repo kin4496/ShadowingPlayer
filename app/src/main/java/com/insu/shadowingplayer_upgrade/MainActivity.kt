@@ -22,6 +22,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.gms.ads.MobileAds
 import com.insu.shadowingplayer_upgrade.ui.dashboard.VideoData
 import com.insu.shadowingplayer_upgrade.ui.home.AudioData
 import com.insu.shadowingplayer_upgrade.ui.home.AudioService
@@ -65,7 +66,7 @@ class MainActivity : AppCompatActivity() {
         val intent= Intent(this,AudioService::class.java)
         bindService(intent,mConnection, Context.BIND_AUTO_CREATE)
         startService(intent)
-
+        MobileAds.initialize(this,"ca-app-pub-3940256099942544~3347511713")
 
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
