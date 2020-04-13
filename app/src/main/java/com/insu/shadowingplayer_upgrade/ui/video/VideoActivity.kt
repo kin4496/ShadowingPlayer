@@ -60,11 +60,6 @@ class VideoActivity : AppCompatActivity() {
 
 
     }
-    override fun getSupportParentActivityIntent(): Intent? {
-        val intent=Intent(this, MainActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        return intent
-    }
     override fun onResume() {
         super.onResume()
         if(useSmi){

@@ -6,13 +6,31 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Binder
 import android.os.IBinder
+import android.os.PowerManager
 
 class AudioService: Service() {
     val mBinder=AudioServiceBinder()
     val mediaPlayer=MediaPlayer()
     var title=""
+    var isPrepared=false
+    override fun onCreate(){
+        super.onCreate()
+        mediaPlayer.setWakeMode(applicationContext, PowerManager.PARTIAL_WAKE_LOCK)
+        mediaPlayer.setOnPreparedListener { mp ->
+            isPrepared=true
+            mp!!.start()
+        }
+        mediaPlayer.setOnCompletionListener {
+            isPrepared=false
+        }
+        mediaPlayer.setOnErrorListener { mp, what, extra ->
+            isPrepared=false
+            false
+        }
+        mediaPlayer.setOnSeekCompleteListener {
 
-
+        }
+    }
     override fun onBind(intent: Intent): IBinder? {
         return mBinder
     }
@@ -29,15 +47,23 @@ class AudioService: Service() {
     fun isPlaying():Boolean=mediaPlayer.isPlaying
     fun currentPlaying():Int=mediaPlayer.currentPosition
     fun pause(){
-        mediaPlayer.pause()
+        if(isPrepared)
+            mediaPlayer.pause()
     }
     fun play(){
-        mediaPlayer.start()
+        if(isPrepared)
+            mediaPlayer.start()
     }
     fun seekTo(pos:Int){
-        mediaPlayer.seekTo(pos)
+        if(isPrepared)
+            mediaPlayer.seekTo(pos)
     }
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        return START_NOT_STICKY
+    override fun onDestroy() {
+        super.onDestroy()
+        if(mediaPlayer!=null){
+            mediaPlayer.stop()
+            mediaPlayer.release()
+        }
     }
+
 }

@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
-
+        Log.d(TAG,"onCreate")
         val navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -64,7 +64,6 @@ class MainActivity : AppCompatActivity() {
 
         val intent= Intent(this,AudioService::class.java)
         bindService(intent,mConnection, Context.BIND_AUTO_CREATE)
-        startService(intent)
         MobileAds.initialize(this,"ca-app-pub-3940256099942544~3347511713")
 
         if (ContextCompat.checkSelfPermission(this,
@@ -136,6 +135,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
     override fun onResume() {
+
         super.onResume()
         if(mService!=null)
             mBound=true
@@ -198,7 +198,11 @@ class MainActivity : AppCompatActivity() {
         }
         cursor?.close()
     }
-
+    override fun onDestroy() {
+        super.onDestroy()
+        audios.clear()
+        videos.clear()
+    }
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
