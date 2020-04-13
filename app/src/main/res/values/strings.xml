@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ShadowingPlayer_Upgrade</string>
+    <string name="app_name">ShadowingPlayer</string>
     <string name="title_audio">Audio</string>
     <string name="title_video">Video</string>
     <string name="title_word">Word</string>

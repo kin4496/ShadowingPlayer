@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.SeekBar
 import com.`is`.shadowingplayer.SubtData
 import com.insu.shadowingplayer_upgrade.MainActivity
 import com.insu.shadowingplayer_upgrade.R
@@ -39,8 +40,27 @@ class AudioActivity : AppCompatActivity() {
         seekBar.max=audio.duration
         endTextView.text=audio.durationForTextView
 
+        seekBar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
 
-        startService(intent)
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                if(MainActivity.mService!=null){
+                    MainActivity.mService!!.seekTo(seekBar!!.progress)
+                }
+            }
+
+        })
+        if(MainActivity.mService?.isPlaying()==false){
+            playBt.setImageResource(R.drawable.ic_play_arrow_black_24dp)
+        }else{
+            playBt.setImageResource(R.drawable.ic_pause_black_24dp)
+        }
         playBt.setOnClickListener{
             if(MainActivity.mService?.isPlaying()==false){
                 playBt.setImageResource(R.drawable.ic_pause_black_24dp)
@@ -214,7 +234,7 @@ class AudioActivity : AppCompatActivity() {
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item?.itemId){
-            R.id.search->{
+            R.id.audioSearch->{
                 if(useSmi)
                     smiSearch()
                 else if(useSrt)
@@ -233,7 +253,7 @@ class AudioActivity : AppCompatActivity() {
         }
         if(id!=0)
             id-=1
-        subtitleListView.setSelection(id)
+        audioSubtitleListView.setSelection(id)
         parsedSmi[id].isUse=true
     }
     override fun getSupportParentActivityIntent(): Intent? {
@@ -250,7 +270,7 @@ class AudioActivity : AppCompatActivity() {
         }
         if(id!=0)
             id-=1
-        subtitleListView.setSelection(id)
+        audioSubtitleListView.setSelection(id)
         parsedSrt[id].isUse=true
     }
     override fun onPause() {
