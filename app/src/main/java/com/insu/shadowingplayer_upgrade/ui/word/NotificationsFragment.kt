@@ -49,10 +49,12 @@ class NotificationsFragment : Fragment(),IOnBackPressed{
         return root
     }
 
-    override fun onBackPressed(){
-       if(webView.canGoBack()){
-           webView.goBack()
-       }
+    override fun onBackPressed():Boolean{
+        return if(webView.canGoBack()){
+            webView.goBack()
+            true
+        }else
+            false
     }
 
 }

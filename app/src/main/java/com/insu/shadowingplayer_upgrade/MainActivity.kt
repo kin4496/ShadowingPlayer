@@ -127,7 +127,8 @@ class MainActivity : AppCompatActivity() {
                 super.onBackPressed()
             }
             is IOnBackPressed -> {
-                fragment.onBackPressed()
+                if(!fragment.onBackPressed())
+                    super.onBackPressed()
             }
             else -> {
                 super.onBackPressed()
