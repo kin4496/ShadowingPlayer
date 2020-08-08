@@ -7,11 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
-import com.`is`.shadowingplayer.SubtData
+import com.insu.shadowingplayer_upgrade.ui.video.data.SubtData
 import com.insu.shadowingplayer_upgrade.R
 import kotlinx.android.synthetic.main.item_subtitle.view.*
 
-class sublistAdapter(val context: Context, val sublist:MutableList<SubtData>): BaseAdapter() {
+class SublistAdapter(val context: Context, val sublist:MutableList<SubtData>): BaseAdapter() {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view: View

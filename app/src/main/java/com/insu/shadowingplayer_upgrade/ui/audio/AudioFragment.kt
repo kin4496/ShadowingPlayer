@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.activity_audio.*
 import kotlinx.android.synthetic.main.fragment_home.*
 
 private const val TAG="HomeFragment"
-class HomeFragment : Fragment() {
+class AudioFragment : Fragment() {
 
     lateinit var audioTitleTextView: TextView
     lateinit var playBt:ImageButton

@@ -8,8 +8,9 @@ import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import com.insu.shadowingplayer_upgrade.R
+import com.insu.shadowingplayer_upgrade.ui.video.data.VideoData
 
-class thumbnailListAdapter(val context: Context, val thumbnaillist:MutableList<VideoData>):
+class ThumbnailListAdapter(val context: Context, val thumbnaillist:MutableList<VideoData>):
 BaseAdapter() {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view: View

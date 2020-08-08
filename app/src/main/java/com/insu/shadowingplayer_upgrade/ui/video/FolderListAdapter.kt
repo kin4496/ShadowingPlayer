@@ -8,7 +8,7 @@ import android.widget.BaseAdapter
 import android.widget.TextView
 import com.insu.shadowingplayer_upgrade.R
 
-class folderListAdapter(val context: Context, val folderList:MutableList<String>):
+class FolderListAdapter(val context: Context, val folderList:MutableList<String>):
     BaseAdapter() {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view: View

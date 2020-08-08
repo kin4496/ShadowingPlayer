@@ -7,12 +7,11 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.SeekBar
-import com.`is`.shadowingplayer.SubtData
+import com.insu.shadowingplayer_upgrade.ui.video.data.SubtData
 import com.insu.shadowingplayer_upgrade.MainActivity
 import com.insu.shadowingplayer_upgrade.R
-import com.insu.shadowingplayer_upgrade.ui.video.sublistAdapter
+import com.insu.shadowingplayer_upgrade.ui.video.SublistAdapter
 import kotlinx.android.synthetic.main.activity_audio.*
-import kotlinx.android.synthetic.main.activity_video.*
 import java.io.*
 import java.util.*
 import kotlin.concurrent.timer
@@ -27,7 +26,7 @@ class AudioActivity : AppCompatActivity() {
     var useSrt=false
     var parsedSrt=mutableListOf<SubtData>()
     var parsedSmi = mutableListOf<SubtData>()
-    lateinit var subAdapter:sublistAdapter
+    lateinit var subAdapter:SublistAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -72,12 +71,12 @@ class AudioActivity : AppCompatActivity() {
         }
         readSubTitleData()
         if(useSmi){
-            subAdapter=sublistAdapter(this,parsedSmi)
+            subAdapter=SublistAdapter(this,parsedSmi)
             audioSubtitleListView.adapter=subAdapter
 
         }else if(useSrt){
 
-            subAdapter=sublistAdapter(this,parsedSrt)
+            subAdapter=SublistAdapter(this,parsedSrt)
             audioSubtitleListView.adapter=subAdapter
 
         }
@@ -160,7 +159,7 @@ class AudioActivity : AppCompatActivity() {
                     smistart = true
                     if (time != -1L) {
                         if(!text.contains("&nbsp")){
-                            parsedSmi.add(SubtData(time,text,useSmi))
+                            parsedSmi.add(SubtData(time,text))
                         }
 
                     }
@@ -198,7 +197,7 @@ class AudioActivity : AppCompatActivity() {
                 if (s==num.toString()) {
                     srtstart=true
                     if (time != -1L) {
-                        parsedSrt.add(SubtData(time,text,useSmi))
+                        parsedSrt.add(SubtData(time,text))
                     }
                     s=buf.readLine()
                     try{

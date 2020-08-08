@@ -13,8 +13,7 @@ import com.insu.shadowingplayer_upgrade.IOnBackPressed
 import com.insu.shadowingplayer_upgrade.R
 
 private const val TAG="WebView"
-class NotificationsFragment : Fragment(),IOnBackPressed{
-
+class WordFragment : Fragment(),IOnBackPressed{
 
     lateinit var webView:WebView
     override fun onCreateView(
